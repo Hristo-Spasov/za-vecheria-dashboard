@@ -1,13 +1,26 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
+import { Toaster } from 'vue-sonner'
+
+const isSidebarOpen = ref(false)
+
+const toggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
+}
+
+const closeSidebar = () => {
+  isSidebarOpen.value = false
+}
 </script>
 
 <template>
   <div class="flex min-h-screen bg-brand-50">
-    <AppSidebar />
+    <AppSidebar :is-open="isSidebarOpen" @close="closeSidebar" />
     <div class="flex-1 flex flex-col min-w-0">
-      <AppHeader />
+      <Toaster position="top-center" richColors />
+      <AppHeader @toggle-sidebar="toggleSidebar" />
       <main class="flex-1 overflow-y-auto">
         <RouterView />
       </main>

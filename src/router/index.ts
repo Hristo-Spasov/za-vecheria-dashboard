@@ -12,11 +12,12 @@ const router = createRouter({
       path: '/',
       component: MainLayout,
       children: [
-        { path: '', name: 'dashboard',component: DashboardView },
-        { path: 'recipe-manager', name: 'recipe-manager',component: RecipeManagerView },
-        { path: 'create', name: 'create',component: CreateView },
-        { path: 'profile', name: 'profile',component: ProfileView },
-      ]
+        { path: '', name: 'dashboard', component: DashboardView },
+        { path: 'recipe-manager', name: 'recipe-manager', component: RecipeManagerView },
+        { path: 'create', name: 'create', component: CreateView },
+        { path: 'create/:id', name: 'edit-recipe', component: CreateView },
+        { path: 'profile', name: 'profile', component: ProfileView },
+      ],
     },
   ],
 })

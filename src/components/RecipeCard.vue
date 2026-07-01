@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Recipe } from '@/data/recipes'
+import { Timer, Utensils } from '@lucide/vue'
 
 defineProps<{
   recipe: Recipe
@@ -17,7 +18,7 @@ defineEmits<{
   >
     <!-- Image placeholder -->
     <div class="h-32 bg-linear-to-br from-brand-100 to-brand-200 flex items-center justify-center">
-      <span class="text-5xl">{{ recipe.imagePlaceholder }}</span>
+      <Utensils :size="32" class="text-brand-400" />
     </div>
     <!-- Info -->
     <div class="p-4">
@@ -38,7 +39,9 @@ defineEmits<{
       </div>
       <p class="text-xs text-brand-500 mb-3 line-clamp-2">{{ recipe.description }}</p>
       <div class="flex items-center justify-between">
-        <span class="text-xs text-brand-500">⏱️ {{ recipe.time }}</span>
+        <span class="text-xs text-brand-500 flex items-center gap-1">
+          <Timer :size="12" /> {{ recipe.time }}
+        </span>
         <span class="text-xs font-semibold" :class="recipe.difficultyColor">
           {{ recipe.difficulty }}
         </span>
