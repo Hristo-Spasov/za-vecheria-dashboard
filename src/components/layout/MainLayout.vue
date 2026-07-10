@@ -3,8 +3,12 @@ import { ref } from 'vue'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import { Toaster } from 'vue-sonner'
+// import { useAuthStore } from '@/stores/auth'
 
 const isSidebarOpen = ref(false)
+// const { isAuthenticated } = useAuthStore()
+
+// console.log(isAuthenticated)
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
