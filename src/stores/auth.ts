@@ -17,8 +17,10 @@ export const useAuthStore = defineStore('auth', () => {
         credentials: 'include',
       })
 
-      user.value = res.ok ? await res.json() : null
-
+      if (!res.ok) {
+        user.value = null
+        return
+      }
       const data = await res.json()
       user.value = data
     } catch {
@@ -28,9 +30,22 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function logout() {
+  async function logout() {
+    try {
+      const csrfRes = await fetch(`${API_BASE}/api/auth/csrf`, { credentials: 'include' })
+      const { csrfToken } = await csrfRes.json()
+      await fetch(`${API_BASE}/api/auth/signout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `csrfToken=${encodeURIComponent(csrfToken)}`,
+      })
+    } catch {
+      user.value = null
+    }
+
     user.value = null
-    window.location.href = `${API_BASE}/api/auth/signout`
+    window.location.href = 'http://localhost:3000/auth/login'
   }
 
   return { user, loading, isAuthenticated, fetchSession, logout }

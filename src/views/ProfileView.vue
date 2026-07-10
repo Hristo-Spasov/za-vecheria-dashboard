@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
-import { user } from '@/data/user'
+import { reactive, ref, watch, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
+import { display } from '@/lib/helpers/display'
 import UnSavedChangesWarning from '@/components/UnSavedChangesWarning.vue'
 import { toast } from 'vue-sonner'
+import { User as UserIcon } from '@lucide/vue'
+
+// --- Auth ---
+const { user } = useAuthStore()
+
+const displayName = computed(() => user?.nickname || user?.name || 'Потребител')
 
 // --- Edit Profile ---
 const isEditing = ref(false)
@@ -20,29 +27,32 @@ const editForm = reactive({
 })
 
 const startEdit = () => {
-  editForm.name = user.name
-  editForm.familyName = user.familyName
-  editForm.nickname = user.nickname
-  editForm.email = user.email
-  editForm.phone = user.phone
-  editForm.address = user.address
-  editForm.city = user.city
-  editForm.postalCode = user.postalCode
-  editForm.country = user.country
+  editForm.name = user?.name || ''
+  editForm.familyName = user?.familyName || ''
+  editForm.nickname = user?.nickname || ''
+  editForm.email = user?.email || ''
+  editForm.phone = user?.phone || ''
+  editForm.address = user?.address || ''
+  editForm.city = user?.city || ''
+  editForm.postalCode = user?.postalCode || ''
+  editForm.country = user?.country || ''
   isEditing.value = true
   unSavedChanges.value = false
 }
 
 const saveEdit = () => {
-  user.name = editForm.name
-  user.familyName = editForm.familyName
-  user.nickname = editForm.nickname
-  user.email = editForm.email
-  user.phone = editForm.phone
-  user.address = editForm.address
-  user.city = editForm.city
-  user.postalCode = editForm.postalCode
-  user.country = editForm.country
+  // TODO: call PUT API to persist changes to database
+  if (user) {
+    user.name = editForm.name || null
+    user.familyName = editForm.familyName || null
+    user.nickname = editForm.nickname || null
+    user.email = editForm.email || null
+    user.phone = editForm.phone || null
+    user.address = editForm.address || null
+    user.city = editForm.city || null
+    user.postalCode = editForm.postalCode || null
+    user.country = editForm.country || null
+  }
   isEditing.value = false
   unSavedChanges.value = false
   toast.success('Профила е обновен успешно!')
@@ -116,11 +126,18 @@ watch(
       <!-- Upper summary profile -->
       <div class="flex-1 flex gap-2 items-center">
         <div
-          class="w-10 h-10 rounded-full bg-brand-500 text-white flex items-center justify-center font-bold text-sm shrink-0"
+          class="w-10 h-10 rounded-full bg-brand-500 text-white flex overflow-hidden items-center justify-center font-bold text-sm shrink-0"
         >
-          {{ user.initials }}
+          <img
+            v-if="user?.avatarUrl"
+            :src="user.avatarUrl"
+            :alt="user?.name || ''"
+            class="w-full h-full object-cover"
+            @error="($event.target as HTMLImageElement).style.display = 'none'"
+          />
+          <UserIcon v-else :size="18" />
         </div>
-        <h2 class="text-lg font-semibold text-brand-900">{{ user.name }}</h2>
+        <h2 class="text-lg font-semibold text-brand-900">{{ displayName }}</h2>
       </div>
 
       <div class="flex gap-2 shrink-0">
@@ -154,13 +171,13 @@ watch(
         <h3 class="text-lg font-semibold text-brand-900">Лична информация</h3>
         <div class="sm:text-right">
           <p class="text-sm font-semibold text-brand-800">Роля</p>
-          <p class="text-sm text-brand-600">{{ user.role }}</p>
+          <p class="text-sm text-brand-600">{{ display(user?.role) }}</p>
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <p class="text-sm font-semibold text-brand-800">Псевдоним</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.nickname }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.nickname) }}</p>
           <input
             v-else
             v-model="editForm.nickname"
@@ -170,7 +187,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Име</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.name }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.name) }}</p>
           <input
             v-else
             v-model="editForm.name"
@@ -180,7 +197,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Фамилия</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.familyName }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.familyName) }}</p>
           <input
             v-else
             v-model="editForm.familyName"
@@ -190,7 +207,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Имейл</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.email }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.email) }}</p>
           <input
             v-else
             v-model="editForm.email"
@@ -200,7 +217,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Телефон</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.phone }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.phone) }}</p>
           <input
             v-else
             v-model="editForm.phone"
@@ -210,7 +227,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Адрес</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.address }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.address) }}</p>
           <input
             v-else
             v-model="editForm.address"
@@ -220,7 +237,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Град</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.city }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.city) }}</p>
           <input
             v-else
             v-model="editForm.city"
@@ -230,7 +247,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Пощенски код</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.postalCode }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.postalCode) }}</p>
           <input
             v-else
             v-model="editForm.postalCode"
@@ -240,7 +257,7 @@ watch(
         </div>
         <div>
           <p class="text-sm font-semibold text-brand-800">Държава</p>
-          <p v-if="!isEditing" class="text-sm text-brand-600">{{ user.country }}</p>
+          <p v-if="!isEditing" class="text-sm text-brand-600">{{ display(user?.country) }}</p>
           <input
             v-else
             v-model="editForm.country"

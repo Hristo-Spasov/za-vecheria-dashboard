@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { FileText, CheckCircle, Clock, XCircle, Utensils, Timer } from '@lucide/vue'
 import { markRaw } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
 const stats = [
   { label: 'Рецепти', value: 12, icon: markRaw(FileText) },
@@ -66,6 +67,7 @@ const recipes = [
     status: 'Одобрена',
   },
 ]
+const { user } = useAuthStore()
 </script>
 
 <template>
@@ -73,7 +75,7 @@ const recipes = [
     <!-- Welcome -->
     <div class="mb-6 md:mb-8">
       <h2 class="text-xl md:text-[1.75rem] font-bold text-brand-900 mb-1">
-        Добре дошъл, Иванe! 👋
+        Добре дошъл, {{ user?.name }} 👋
       </h2>
       <p class="text-brand-600 text-sm md:text-[0.95rem]">Ето какво се случва с твоите рецепти.</p>
     </div>

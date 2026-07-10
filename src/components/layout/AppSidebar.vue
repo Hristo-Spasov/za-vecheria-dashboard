@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Home, BookOpen, PlusCircle, User, LogOut } from '@lucide/vue'
+import { Home, BookOpen, PlusCircle, User, ExternalLink } from '@lucide/vue'
 
 defineProps<{
   isOpen: boolean
@@ -58,11 +58,11 @@ const navItems = [
     <!-- Footer -->
     <div class="p-3 border-t border-amber-50">
       <a
-        href="#"
+        href="http://localhost:3000/main"
         class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-stone-300 hover:bg-white/10 hover:text-white transition-colors duration-150"
       >
-        <LogOut :size="18" class="w-6 text-center" />
-        <span>Изход</span>
+        <ExternalLink :size="18" class="w-6 text-center" />
+        <span>Към сайта</span>
       </a>
     </div>
   </aside>

@@ -1,9 +1,58 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { recipes } from '@/data/recipes'
-import type { Recipe } from '@/data/recipes'
 import RecipeCard from '@/components/RecipeCard.vue'
 import { Search, X, UtensilsCrossed } from '@lucide/vue'
+
+const recipes = [
+  {
+    id: 1,
+    title: 'Шопска салата',
+    difficulty: 'Лесно',
+    difficultyColor: 'text-green-500',
+    time: '15 мин',
+    status: 'Одобрена',
+  },
+  {
+    id: 2,
+    title: 'Мусака',
+    difficulty: 'Средно',
+    difficultyColor: 'text-orange-500',
+    time: '90 мин',
+    status: 'Одобрена',
+  },
+  {
+    id: 3,
+    title: 'Боб чорба',
+    difficulty: 'Лесно',
+    difficultyColor: 'text-green-500',
+    time: '120 мин',
+    status: 'Чакаща',
+  },
+  {
+    id: 4,
+    title: 'Каварма',
+    difficulty: 'Трудно',
+    difficultyColor: 'text-red-500',
+    time: '75 мин',
+    status: 'Одобрена',
+  },
+  {
+    id: 5,
+    title: 'Пълнени чушки',
+    difficulty: 'Средно',
+    difficultyColor: 'text-orange-500',
+    time: '60 мин',
+    status: 'Чакаща',
+  },
+  {
+    id: 6,
+    title: 'Таратор',
+    difficulty: 'Лесно',
+    difficultyColor: 'text-green-500',
+    time: '10 мин',
+    status: 'Одобрена',
+  },
+]
 
 const searchQuery = ref('')
 const selectedCategory = ref('Всички')
